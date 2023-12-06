@@ -20,9 +20,12 @@
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring-cloud.version>2022.0.2</spring-cloud.version>
+
 	</properties>
 
 	<modules>
+		<module>api-gateway</module>
 		<module>inventory-microservice</module>
 		<module>orders-microservice</module>
 		<module>products-microservice</module>
@@ -30,6 +33,18 @@
 
 	<dependencies>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<plugins>
 		</plugins>
