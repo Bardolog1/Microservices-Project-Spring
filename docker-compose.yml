@@ -44,3 +44,42 @@ services:
     expose:
       - 5435
     command: -p 5435
+
+    ## Postgres db for keycloak
+
+  db-keycloak:
+    container_name: db-keycloak
+    image: postgres:15.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: db-keycloak
+      POSTGRES_USER: bardolog
+      POSTGRES_PASSWORD: TestDev1234
+    ports:
+      - 5433:5433
+    expose:
+      - 5433
+    command: -p 5433
+
+###KeyCloak
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:21.0.2
+    command: ["start-dev"]
+    ports:
+      - 8181:8181
+    expose:
+      - 8181
+    depends_on:
+      - db-keycloak
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: db-keycloak
+      DB_DATABASE: db-keycloak
+      DB_PORT: 5433
+      DB_USER: bardolog
+      DB_PASSWORD: TestDev1234
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_PORT: 8181
+
