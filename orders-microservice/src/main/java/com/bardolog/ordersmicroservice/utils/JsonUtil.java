@@ -1,4 +1,4 @@
-package com.bardolog.ordersmicroservice.util;
+package com.bardolog.ordersmicroservice.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

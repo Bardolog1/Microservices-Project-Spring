@@ -10,7 +10,7 @@ import com.bardolog.ordersmicroservice.model.entities.OrderEntity;
 import com.bardolog.ordersmicroservice.model.entities.OrderItemEntity;
 import com.bardolog.ordersmicroservice.model.enums.OrderStatus;
 import com.bardolog.ordersmicroservice.repositories.OrderRepository;
-import com.bardolog.ordersmicroservice.util.JsonUtil;
+import com.bardolog.ordersmicroservice.utils.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class OrderService {
           var saverOrder = this.orderRepository.save(order);
 
           //TODO: Send message  to order topic
-            this.kafkaTemplate.send("orders-topic", JsonUtil.toJson(
+            this.kafkaTemplate.send("orders-events", JsonUtil.toJson(
                     new OrderEvent(saverOrder.getOrderNumber(), saverOrder.getOrderItems().size(), OrderStatus.PLACED)
             ));
 
