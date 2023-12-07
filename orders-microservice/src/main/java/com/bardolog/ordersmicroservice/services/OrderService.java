@@ -1,14 +1,18 @@
 package com.bardolog.ordersmicroservice.services;
 
 
+import com.bardolog.ordersmicroservice.events.OrderEvent;
 import com.bardolog.ordersmicroservice.model.dtos.BaseResponse;
 import com.bardolog.ordersmicroservice.model.dtos.OrderItemRequest;
 import com.bardolog.ordersmicroservice.model.dtos.OrderRequest;
 import com.bardolog.ordersmicroservice.model.dtos.OrdersResponse;
 import com.bardolog.ordersmicroservice.model.entities.OrderEntity;
 import com.bardolog.ordersmicroservice.model.entities.OrderItemEntity;
+import com.bardolog.ordersmicroservice.model.enums.OrderStatus;
 import com.bardolog.ordersmicroservice.repositories.OrderRepository;
+import com.bardolog.ordersmicroservice.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,6 +25,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public OrdersResponse placeOrder(OrderRequest orderRequest){
 
@@ -40,6 +45,12 @@ public class OrderService {
           order.setOrderNumber(UUID.randomUUID().toString());
           order.setOrderItems(orderRequest.getOrderItems().stream().map(oR -> mapOrderItemRequestToOrderItem(oR, order)).toList());
           var saverOrder = this.orderRepository.save(order);
+
+          //TODO: Send message  to order topic
+            this.kafkaTemplate.send("orders-topic", JsonUtil.toJson(
+                    new OrderEvent(saverOrder.getOrderNumber(), saverOrder.getOrderItems().size(), OrderStatus.PLACED)
+            ));
+
           return mapToOrderResponse(saverOrder);
       }else{
           throw new IllegalArgumentException("Some of the products are not in stock");

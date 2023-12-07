@@ -30,6 +30,7 @@
 		<module>inventory-microservice</module>
 		<module>orders-microservice</module>
 		<module>products-microservice</module>
+		<module>notification-service</module>
 	</modules>
 
 	<dependencies>
