@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -26,10 +27,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .securityMatcher("/**").authorizeHttpRequests().anyRequest().authenticated()
-                .and()
-                .oauth2ResourceServer(config  ->config.jwt().jwtAuthenticationConverter(jwtConverter()));
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers(request ->
+                                        request.getRequestURI().contains("/actuator/products")).permitAll()
+                                .anyRequest().authenticated())
+                .oauth2ResourceServer(config  ->
+                        config.jwt(jwt ->
+                                jwt.jwtAuthenticationConverter(jwtConverter())));
 
         return http.build();
     }
