@@ -63,4 +63,4 @@ Inicia Keycloak, Zookeeper, Kafka, Zipkin, Prometheus & Grafana
 ```bash
   docker-compose up -d keycloak zookeeper kafka zipkin prometheus grafana
 ```
-Espera a que Keycloak se inicie y, luego, configura reinos (realms), clientes (clients) y usuarios según sea necesario.
+Espera a que Keycloak se inicie y luego configura  realms,  clients, usuarios y roles de usuario según sea necesario.
