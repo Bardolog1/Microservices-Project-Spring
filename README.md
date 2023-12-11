@@ -52,8 +52,6 @@ Inicia las bases de datos con Docker:
 
 ```bash
   docker-compose up -d db-products db-inventory db-orders db-keycloak
-  docker-compose up -d keycloak zookeeper kafka zipkin prometheus grafana
-
 ```
 
 ## Iniciar todos los contenedores 
